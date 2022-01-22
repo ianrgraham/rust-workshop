@@ -1,5 +1,5 @@
 
-// TODO there should also be a mechinism by which bonded pairs can be expressed
+// TODO there should also be a mechanism by which bonded pairs can be expressed
 // this may be possible with the way that we have defined our vec of dyn potentials
 
 // I think I've learned a few important lessons about traits in trying to do this.

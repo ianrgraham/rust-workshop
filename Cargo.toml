@@ -1,0 +1,8 @@
+[workspace]
+
+members = [
+    "part-1/*/",
+    "part-2/*/",
+]
+
+exclude = ["part-1/hello-world"]
