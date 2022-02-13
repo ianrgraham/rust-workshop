@@ -12,7 +12,7 @@ fn main() {
 
     let tmp = MyStruct {a: &my_str};
 
-    std::mem::drop(my_str);
+    // std::mem::drop(my_str);
 
     println!("{tmp:?}");
     println!("{:?}",tmp);
