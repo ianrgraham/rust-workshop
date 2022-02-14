@@ -54,10 +54,14 @@ fn main() {
 
     let my_tuple: (f32, u64, bool) = (3.141592, 6, true);
 
+    println!("{} {}", my_tuple.0, my_tuple.1);
+
     // Another compound type is the array.
 
     let my_float_array: [f32; 3] = [1.0, 2.0, 3.0];
     let my_char_array: [char; 4] = ['a', 'b', 'c', 'd'];
+
+    println!("{} {}", my_float_array[2], my_char_array[0]);
 
     // ******************** Functions ********************
 
@@ -77,7 +81,7 @@ fn main() {
     // Any arguments are defined by comma-separated list of "{name}: {type}",
     // and the return type follows with a "-> {type}".
     fn square(num: f32) -> f32 {
-        num * num
+        num * num // last statement of function (without ;) is returned
     }
 
     let my_num = 2.0f32;
@@ -90,15 +94,25 @@ fn main() {
     // If it hasn't already been painfully obvious ... single-line comments are
     // precedded by a double-slash "//"
 
-    // Hey look, I'm a single-line comment! I'm so (not) special.
+    // Hey look, I'm a single-line comment! I'm so (not) special. You should use
+    // me everywhere!
 
-    // Or can even define multiline comments with "/* ... */"
+    // Or you can even define multi-line comments with "/* ... */", but like ...
+    // why would you?
 
     /*
         I'm
         a
         multi-line
         comment
+        and
+        I
+        am
+        kinda
+        boring
+        and
+        not
+        recommend
     */
 
     // ******************** Control Flow ********************
