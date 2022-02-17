@@ -5,7 +5,6 @@
 // statements, ensuring that you cover all cases. addressed. Enums also allow
 // you to mix and match the types stored within an enum, which is different
 
-#[derive(Clone)]
 enum Colors {
     Red,
     Blue,

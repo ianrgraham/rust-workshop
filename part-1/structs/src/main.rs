@@ -66,6 +66,7 @@ fn main() {
     x.nuke_via_haiku()
 }
 
+// This is an example implementation of the Display trait for our Complex64 struct.
 impl std::fmt::Display for Complex64 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
         let sign = if self.im >= 0.0 { "+" } else { "-" };
