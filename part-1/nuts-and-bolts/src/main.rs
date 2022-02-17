@@ -178,6 +178,29 @@ fn main() {
     println!();
 
     // Or more abstract iterators
+    use std::io::BufRead;
+
+    fn read_lines<P>(
+        filename: P,
+    ) -> std::io::Result<std::io::Lines<std::io::BufReader<std::fs::File>>>
+    where
+        P: AsRef<std::path::Path>,
+    {
+        let file = std::fs::File::open(filename)?;
+        Ok(std::io::BufReader::new(file).lines())
+    }
+
+    if let Ok(lines) = read_lines("names.txt") {
+        // Consumes the iterator, returns an (Optional) String
+        for line in lines {
+            if let Ok(ip) = line {
+                println!("{}", ip);
+            }
+        }
+    }
+
+    // And even wackier iterators!
+    // This actually uses unstable features
     println!("Type 'quit' to exit.");
     for line in std::io::stdin().lines() {
         if line.unwrap() == "quit".to_string() {

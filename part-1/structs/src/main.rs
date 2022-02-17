@@ -41,9 +41,11 @@ impl Complex64 {
 }
 
 fn main() {
-    let x = Complex64::new(1.0, -1.0);
+    let mut x = Complex64::new(1.0, 0.0);
 
     println!("The norm of {:?} is {}", x, x.norm());
+
+    println!("{}", -1.0f32.sin());
 
     // This printing isn't so nice, but how oh how can we make our custom function
     // print like u32 or &str? Is there some class we can inherit? Not a class
@@ -51,21 +53,24 @@ fn main() {
     // the machinery of traits! These are similar to interfaces if you've ever used
     // Java. Essentially, traits define an interface that a type must have to
     // implement said trait, but the implementation is up to the creator of the
-    // struct! This is in start contrast to how inheritance is used to obtain
+    // struct! This is in stark contrast to how inheritance is used to obtain
     // shared behaviour in C++ and Python, as implementations of functions from
     // the base class waterfall onto the child class. Sometimes, this is exactly
     // what the programmer wants! But in many other cases it is known to cause
     // problems.
 
+    x.rotate(3.141592*6.0/4.0);
+
     println!("The norm of {} is {}", x, x.norm());
 
+    x.nuke_via_haiku()
 }
 
 impl std::fmt::Display for Complex64 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
         let sign = if self.im >= 0.0 { "+" } else { "-" };
 
-        write! {f, "{}{}{}i", self.re, sign, self.im.abs()}?;
+        write! {f, "{:.1}{}{:.1}i", self.re, sign, self.im.abs()}?;
         Ok(())
     }
 }
