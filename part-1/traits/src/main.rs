@@ -1,221 +1,185 @@
-// Generic data types
-//
-// Generics allow us to create definitions for items like function signatures or structs, which can then be usd with different data types.
-// In fact, we've implicitly used generics before: the vector itself is defined as a generic trait.
+// Here we cover traits. Traits guarantees for the compiler that the object (which can be any `Self`) implements specific features. We've previously seen the fmt::Display trait for the Complex64.
 
-// Let's assume we have two functions that operate in a similar manner for different data types
+// The specific implementation of the guaranteed behavior is type specific. Displaying a string is different from displaying our Complex64.
+
+// Let's construct a struct called `Sheep` and define the `Animal` trait.
+struct Sheep {
+    naked: bool,
+    name: &'static str,
+}
+struct Dog {
+    naked: bool,
+    name: &'static str,
+}
+
+trait Animal {
+    // Associated function signature; `Self` refers to the implementor type.
+    fn new(name: &'static str) -> Self;
+
+    // Method signatures; these will return a string.
+    fn name(&self) -> &'static str;
+    fn noise(&self) -> &'static str;
+
+    // Traits can provide default method definitions.
+    fn talk(&self) {
+        println!("{} says {}", self.name(), self.noise());
+    }
+}
+
+// Implementing `Sheep` and its corresponding functions
+impl Sheep {
+    fn is_naked(&self) -> bool {
+        self.naked
+    }
+
+    fn shear(&mut self) {
+        if self.is_naked() {
+            // Implementor methods can use the implementor's trait methods.
+            println!("{} is already naked...", self.name());
+        } else {
+            println!("{} gets a haircut!", self.name);
+
+            self.naked = true;
+        }
+    }
+}
+
+// Implement the `Animal` trait for `Sheep`.
+impl Animal for Sheep {
+    // `Self` is the implementor type: `Sheep`.
+    fn new(name: &'static str) -> Sheep {
+        Sheep {
+            name: name,
+            naked: false,
+        }
+    }
+
+    fn name(&self) -> &'static str {
+        self.name
+    }
+
+    fn noise(&self) -> &'static str {
+        if self.is_naked() {
+            "baaaaah?"
+        } else {
+            "baaaaah!"
+        }
+    }
+
+    // Default trait methods can be overridden.
+    fn talk(&self) {
+        // For example, we can add some quiet contemplation.
+        println!("{} pauses briefly... {}", self.name, self.noise());
+    }
+}
+
+// Implement the `Animal` trait for `Dog`.
+impl Animal for Dog {
+    // `Self` is the implementor type: `Sheep`.
+    fn new(name: &'static str) -> Dog {
+        Dog {
+            name,
+            naked: false,
+        }
+    }
+
+    fn name(&self) -> &'static str {
+        self.name
+    }
+
+    fn noise(&self) -> &'static str {
+        "Woof"
+    }
+
+    // Default trait methods can be overridden.
+    fn talk(&self) {
+        // For example, we can add some quiet contemplation.
+        println!("{} pauses briefly... {}", self.name, self.noise());
+    }
+}
 
 fn main() {
+    // Type annotation is necessary in this case.
+    let mut dolly: Sheep = Animal::new("Dolly");
+    // TODO ^ Try removing the type annotations.
 
-    fn largest_i32(list: &[i32]) -> i32 {
-        let mut largest = list[0];
+    dolly.talk();
+    dolly.shear();
+    dolly.talk();
 
-        for &item in list {
-            if item > largest {
-                largest = item;
-            }
-        }
+    let fido = Dog::new("Fido");
 
-        largest
-    }
-
-    fn largest_char(list: &[char]) -> char {
-        let mut largest = list[0];
-
-        for &item in list {
-            if item > largest {
-                largest = item;
-            }
-        }
-
-        largest
-    }
-
-    let number_list = vec![34, 50, 25, 100, 65];
-
-    let result = largest_i32(&number_list);
-    println!("The largest number is {}", result);
-
-    let char_list = vec!['y', 'm', 'a', 'q'];
-
-    let result = largest_char(&char_list);
-    println!("The largest char is {}", result);
+    fido.talk();
 }
 
 
+// We can also define our traits for external types (types we didn't define, such as the Vec<T> or Option<T>). We can use external traits like Display
+// For our own traits, we can define default implementations within the declaration block
 
-// Since the functions both return the largest of their specific type, this makes an easy use case for a generic trait. 
-// We define teh generic as something short; typically, devs use `T` as the default choice. 
+pub trait Summary{
+    fn summarize(&self) -> String{
+        String::from("Here's a summary snippet!")
+    }
+}
 
-mod compile_error{
-    fn largest<T>(list: &[T]) -> T{
-        let mut largest = list[0];
+impl Summary for Sheep {
+    fn summarize(&self) -> String {
+        String::from("I am a sheep and my name is {self.name}")
+    }
+}
 
-        for &item in list {
-            if item > largest {
-                largest = item;
-            }
+impl <T> Summary for Vec<T>{
+    fn summarize(&self) -> String {
+        String::from("I have {self.len()} elements")
+    }
+}
+
+use std::fmt::Display;
+
+// You can also use Traits as a parameter for a function
+pub fn notify(item: &impl Summary) {
+    println!("Breaking news! {}", item.summarize());
+}
+
+// This can alternatively written as 
+pub fn notify_v2<T: Summary>(item: &T) {
+    println!("Breaking news! {}", item.summarize());
+}
+
+// You can string them together
+pub fn notify_v3<T: Summary + Display>(item: &T) {
+    println!("Breaking news! {}", item.summarize());
+}
+
+// Or explicitly write teh trait types
+pub fn notify_v4<T>(item: &T) 
+where T: Summary + Display {
+    println!("Breaking news! {}", item.summarize());
+}
+
+
+// You can also use the traits as a condition for the output
+pub fn notify_v5() -> impl Summary{
+    Sheep {
+        name: "Jim",
+        naked: false,
+    }
+}
+
+// You can also conditionally implement traits based on the type
+
+
+struct Pair<T> {
+    x: T,
+    y: T,
+}
+
+impl<T: Display + PartialOrd> Pair<T> {
+    fn cmp_display(&self) {
+        if self.x >= self.y {
+            println!("The largest member is x = {}", self.x);
+        } else {
+            println!("The largest member is y = {}", self.y);
         }
-        largest
-    }
-}
-
-// When we compile we get an error, but a useful one
-//    Compiling traits v0.1.0 (/home/chris/code/rust-workshop/part-1/traits)
-// error[E0369]: binary operation `>` cannot be applied to type `T`
-//   --> part-1/traits/src/main.rs:54:17
-//    |
-// 54 |         if item > largest {
-//    |            ---- ^ ------- T
-//    |            |
-//    |            T
-//    |
-// help: consider restricting type parameter `T`
-//    |
-// 50 | fn largest<T: std::cmp::PartialOrd>(list: &[T]) -> T{
-//    |             ++++++++++++++++++++++
-//
-// For more information about this error, try `rustc --explain E0369`.
-// error: could not compile `traits` due to previous error
-
-// It tells that the generic needs to implement a PartialOrd from the cmp (compare) portion of the standard library. This is how we tell the compiler that we want to the generic to implement a certain trait
-
-
-mod no_error{
-    fn largest<T: std::cmp::PartialOrd>(list: &[T]) -> T{
-        let mut largest = list[0];
-
-        for &item in list {
-            if item > largest {
-                largest = item;
-            }
-        }
-        largest
-    }
-
-    fn run_example() {
-        let number_list = vec![34, 50, 25, 100, 65];
-
-        let result = largest(&number_list);
-        println!("The largest number is {result}.");
-
-        let char_list = vec!['y', 'm', 'a', 'q'];
-
-        let result = largest(&char_list);
-        println!("The largest char is {result}.");
-    }
-
-}
-
-
-// We can also use generics within the definitions of structs
-
-
-
-// Note that as written, the above struct requires both entries to be of the same type. You cannot mix a float with an integer
-
-mod partially_failing_example{
-    struct Point<T> {
-        x: T,
-        y: T
-    }
-    fn point_error(){
-        let integer = Point{x: 5, y:10};
-        let float   = Point{x: 5.2, y:3.14159};
-        // This one below fails
-        let mix     = Point{x: 1, y:1.41421546657};
-    }
-}
-
-// This can be avoided if you two different different generics in the struct definitions 
-
-mod no_fail {
-    struct Point<T,U> {
-        x: T,
-        y: U
-    }
-    fn point_error(){
-        let integer = Point{x: 5, y:10};
-        let float   = Point{x: 5.2, y:3.14159};
-        // This one below fails
-        let mix     = Point{x: 1, y:1.41421546657};
-    }
-}
-
-
-// We can also use them in Enum definitions. In fact, the `Option` enum implements it. 
-// Let's check out the definition of Option from the standard library
-
-mod options{
-    // Copied from the standard library. 
-    enum Option<T> {
-        Some(T), 
-        None,
-    }
-    
-    // Enums can also have multiple generic types over its fields. A simple example is the Result class, which allows you to determine if a function encountered a problem or whether it ran successfully. 
-    // Results are useful when something could fail and you want to handle errors. For example, when trying to open a file, you might not have read permissions or the file might not exist. Both would be errors you would want to handle instead of `panick`ing and crashing the program.
-
-    enum Result<T, E> {
-        Ok(T), 
-        Err(E),
-    }
-
-    // Generics cna also be used in Method definitions
-}
-
-mod method {
-    struct Point<T> {
-        x: T,
-        y: T,
-    }
-
-    impl<T> Point<T> {
-        fn x(&self) -> &T {
-            &self.x
-        }
-    }
-
-    fn test(){
-        let p = Point {x: 5, y: 10};
-
-        println!("p.x = {}", p.x());
-    }
-
-    // You can also provide additional functional for some constraint on the generic type.
-    // Here, we declare an additional function for a Point<f32>
-
-    impl Point<f32> {
-        fn distance_from_origin(&self) -> f32 {
-            (self.x.powi(2) + self.y.powi(2)).sqrt()
-        }
-    }
-
-}
-
-// YOu can also implement the generics when 
-
-mod mixing_generics{
-        struct Point<X1, Y1> {
-        x: X1,
-        y: Y1,
-    }
-
-    impl<X1, Y1> Point<X1, Y1> {
-        fn mixup<X2, Y2>(self, other: Point<X2, Y2>) -> Point<X1, Y2> {
-            Point {
-                x: self.x,
-                y: other.y,
-            }
-        }
-    }
-
-    fn generics() {
-        let p1 = Point { x: 5, y: 10.4 };
-        let p2 = Point { x: "Hello", y: 'c' };
-
-        let p3 = p1.mixup(p2);
-
-        println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
     }
 }
