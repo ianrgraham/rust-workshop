@@ -15,3 +15,6 @@ are found [here](https://forge.rust-lang.org/infra/other-installation-methods.ht
 
 `rustup` is a handy tool from which we can install and update compiler toolchains,
 editor tools, you name it!
+
+
+[A link to the presentation](https://docs.google.com/presentation/d/1Y5O8tJ0Hft5iBmeslIsx73Qnocku2DEf/edit?usp=sharing&ouid=100300120032301499502&rtpof=true&sd=true)
