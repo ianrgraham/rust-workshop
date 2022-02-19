@@ -3,6 +3,7 @@
 members = [
     "part-1/*/",
     "part-2/*/",
+    "exercises/*/",
 ]
 
 exclude = ["part-1/hello-world"]

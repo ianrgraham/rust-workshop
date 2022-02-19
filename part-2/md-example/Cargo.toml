@@ -5,4 +5,5 @@ edition = "2021"
 
 [dependencies]
 ndarray = "*"
-parking_lot = "*"
+num-traits = "*"
+anyhow = "*"
