@@ -1,10 +1,9 @@
 [workspace]
 
 members = [
-    "part-1/*/",
-    "part-2/*/",
+    "lessons/*/",
     "exercises/*/",
     "working"
 ]
 
-exclude = ["part-1/hello-world"]
+exclude = ["lessons/1-hello-world"]

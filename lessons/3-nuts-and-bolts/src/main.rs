@@ -1,4 +1,3 @@
-#![feature(stdin_forwarders)]
 #![allow(unused_variables)]
 #![allow(unused_assignments)]
 

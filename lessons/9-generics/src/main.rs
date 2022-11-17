@@ -47,18 +47,18 @@ fn main() {
 // Since the functions both return the largest of their specific type, this makes an easy use case for a generic trait. 
 // We define teh generic as something short; typically, devs use `T` as the default choice. 
 
-mod compile_error{
-    fn largest<T>(list: &[T]) -> T{
-        let mut largest = list[0];
+// mod compile_error{
+//     fn largest<T>(list: &[T]) -> T{
+//         let mut largest = list[0];
 
-        for &item in list {
-            if item > largest {
-                largest = item;
-            }
-        }
-        largest
-    }
-}
+//         for &item in list {
+//             if item > largest {
+//                 largest = item;
+//             }
+//         }
+//         largest
+//     }
+// }
 
 // When we compile we get an error, but a useful one
 //    Compiling traits v0.1.0 (/home/chris/code/rust-workshop/part-1/traits)
@@ -82,7 +82,7 @@ mod compile_error{
 
 
 mod no_error{
-    fn largest<T: std::cmp::PartialOrd>(list: &[T]) -> T{
+    fn largest<T: std::cmp::PartialOrd + Copy>(list: &[T]) -> T{
         let mut largest = list[0];
 
         for &item in list {
@@ -123,7 +123,7 @@ mod partially_failing_example{
         let integer = Point{x: 5, y:10};
         let float   = Point{x: 5.2, y:3.14159};
         // This one below fails
-        let mix     = Point{x: 1, y:1.41421546657};
+        // let mix     = Point{x: 1, y:1.41421546657};
     }
 }
 
