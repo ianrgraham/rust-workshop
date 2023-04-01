@@ -72,6 +72,12 @@ fn main() {
     //     octets: [u8; 4],
     // }
 
+    // impl IpV4Addr {
+    //     fn from_bytes(bytes: (u8, u8, u8, u8)) -> Self {
+    //         ...
+    //     }
+    // }
+
     // struct IpV6Addr {
     //     octets: [u8; 8],
     // }
