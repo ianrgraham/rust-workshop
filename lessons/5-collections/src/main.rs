@@ -4,7 +4,10 @@ fn main() {
 
     // We've seen one collection quite a lot so far, the humble Vec<T>.
 
-    let mut my_vec = vec![1u32, 2, 3, 4, 5];
+    // let mut my_vec = vec![1u32, 2, 3, 4, 5];
+    // or without the macro
+    let mut my_vec = Vec::<u32>::new();
+    my_vec.extend_from_slice(&[1u32, 2, 3, 4, 5]);
 
     for elem in &mut my_vec {
         *elem += 10;
