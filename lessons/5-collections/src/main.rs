@@ -1,6 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 fn main() {
+    // ******************** Vectors ********************
 
     // We've seen one collection quite a lot so far, the humble Vec<T>.
 
@@ -19,6 +20,7 @@ fn main() {
 
     my_vec.iter_mut().for_each(|x| *x += 1);
 
+    // ******************** HashMap and HashSet ********************
 
     // Another common collection is the HashMap, which is essentially a strongly
     // typed Python dict
@@ -37,7 +39,7 @@ fn main() {
         println!("The population of Philly is {}", pop)
     }
 
-    // Derivate from the HashMap is the HashSet, which is simply a HashMap with
+    // Derived from the HashMap is the HashSet, which is simply a HashMap with
     // v=()
 
     let mut my_set = HashSet::<_>::from_iter([1,2,3]);
